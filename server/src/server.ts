@@ -16,7 +16,7 @@ class App {
 
   public listen = (): void => {
     this.expressApplication.listen(this.serverPort, () => {
-      Logger.http(`Server running on port ${this.serverPort}`);
+      Logger.http(`Server running on port ${this.serverPort}...`);
     });
   };
 }
