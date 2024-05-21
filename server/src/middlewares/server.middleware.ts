@@ -6,6 +6,7 @@ const initializeMiddlewares = (expressApplication: Application) => {
   expressApplication.use(cors());
   expressApplication.use(express.json());
   expressApplication.use(morganMiddleware);
+  console.log("Initialized Middlewares...!");
 };
 
 export default initializeMiddlewares;
