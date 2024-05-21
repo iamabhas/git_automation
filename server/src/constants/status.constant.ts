@@ -1,7 +1,7 @@
 export enum statusConstants {
-  ERROR = "error",
-  FAIL = "fail",
-  SUCCESS = "success",
+  ERROR = "Error",
+  FAIL = "Fail",
+  SUCCESS = "Success",
 }
 
 export const statusCodeMessages: { [key: number]: string } = {
