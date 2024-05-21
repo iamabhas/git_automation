@@ -12,7 +12,8 @@ const handleResponse = (
 )=>{
 
     const responseJson:IResponseJson={
-        status:`${handleStatus(statusCode)} | ${statusCodeMessages[statusCode] || "unknown"}`,
+        statusCode:`${statusCode} ${statusCodeMessages[statusCode] || "unknown" } `,
+        status:handleStatus(statusCode),
         message:message,
     }
 
@@ -21,7 +22,7 @@ const handleResponse = (
         responseJson.dataLength = length
     }
 
-    return res.status(statusCode).json(responseJson);
+    return res.json(responseJson);
 }
 
 export default handleResponse
