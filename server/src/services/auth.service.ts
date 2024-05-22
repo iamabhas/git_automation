@@ -1,7 +1,6 @@
 import {Response} from "express";
 import {Octokit} from "@octokit/rest";
 import responseHandler from "../helpers/responseHandler";
-import AppError from "../utils/appError.util";
 
 class AuthService {
 
