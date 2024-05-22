@@ -20,7 +20,7 @@ const initializeRoutes = (expressApplication: Application) => {
 
   // error route
   expressApplication.all("*", (req:Request,res:Response,next:NextFunction) => {
-    next(new AppError(`Cannot find ${req.originalUrl}`,404))
+    next(new AppError(`Cannot find ${req.originalUrl} on method ${req.method}`,404))
   })
 
   expressApplication.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
