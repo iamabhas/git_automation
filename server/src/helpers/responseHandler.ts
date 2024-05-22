@@ -22,7 +22,7 @@ const handleResponse = (
         responseJson.dataLength = length
     }
 
-    return res.json(responseJson);
+     return res.json(responseJson)
 }
 
 export default handleResponse
