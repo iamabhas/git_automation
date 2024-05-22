@@ -1,13 +1,8 @@
-import responseHandler from "./responseHandler";
 import { Response, Request, NextFunction } from 'express';
+import responseHandler from "./responseHandler";
 import {statusConstants} from "../constants/status.constant";
-
+import {ICustomError} from "../@types/interfaces/customError";
 const {ERROR}=statusConstants
-
-interface ICustomError extends Error {
-    statusCode: number;
-    status: string;
-}
 
 const handleError = (err: ICustomError, req: Request, res: Response, next: NextFunction) => {
     err.statusCode = err.statusCode || 520;
