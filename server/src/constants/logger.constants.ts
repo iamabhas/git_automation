@@ -7,10 +7,10 @@ export const colorConstants = {
 };
 
 export enum typeConstants {
-  ERROR = "error",
+  // ERROR = "error",
   WARN = "warn",
-  INFO = "info",
-  HTTP = "http",
+  // INFO = "info",
+  // HTTP = "http",
   DEBUG = "debug",
 }
 

@@ -1,5 +1,5 @@
 export enum nodeEnvironmentConstants {
-  PRODUCTION = "production",
+  // PRODUCTION = "production",
   DEVELOPMENT = "development",
-  STAGING = "staging",
+  // STAGING = "staging",
 }
