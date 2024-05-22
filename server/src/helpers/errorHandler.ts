@@ -1,15 +1,18 @@
-import handleStatus from "./statusHandler";
+import responseHandler from "./responseHandler";
+import { Response, Request, NextFunction } from 'express';
+import {statusConstants} from "../constants/status.constant";
 
-class AppError extends Error {
-     statusCode:number;
-     status:string
+const {ERROR}=statusConstants
 
-    constructor(message:string,statusCode:number) {
-        super(message);
-        this.statusCode=statusCode
-        this.status = handleStatus(statusCode)
-        Error.captureStackTrace(this,this.constructor)
-    }
+interface ICustomError extends Error {
+    statusCode: number;
+    status: string;
 }
 
-export default AppError;
+const handleError = (err: ICustomError, req: Request, res: Response, next: NextFunction) => {
+    err.statusCode = err.statusCode || 520;
+    err.status = err.status || ERROR;
+    return responseHandler(res, err.statusCode, err.message);
+};
+
+export default handleError;
