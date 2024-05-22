@@ -8,10 +8,6 @@ class AuthService {
     public static async loginService(res: Response,body:any) {
             const {githubAccessToken} = body
 
-            if(!githubAccessToken) {
-                throw new AppError("Github access token is missing !",400);
-            }
-
             const octokit = new Octokit({auth:githubAccessToken});
 
             const {data:user} = await octokit.request("GET /user")
