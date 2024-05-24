@@ -2,7 +2,7 @@ import {Response} from "express";
 import {Octokit} from "@octokit/rest";
 import responseHandler from "../helpers/responseHandler";
 import GenAIService from "./genAI.service";
-
+import AppError from "../utils/appError.util";
 class GitRepositoryService {
 
     public static async fetchAllReposService(res: Response,body:any) {
@@ -29,7 +29,7 @@ class GitRepositoryService {
 
         const {data:user} = await octokit.request("GET /user")
 
-        const { data: file } = await octokit.request(
+        const { data: fileData } = await octokit.request(
             "GET /repos/{owner}/{repo}/contents/{path}",
             {
                 owner: user.login,
@@ -38,12 +38,35 @@ class GitRepositoryService {
             }
         );
 
-        // const content = Buffer.from(file.content, "base64").toString();
-        // const summary  = await GenAIService.summarizeCode(content)
-        // const responseData = {"Code Summary":summary}
-        // return responseHandler(res,200,`File from repo fetched successfully !`,responseData)
+        if (Array.isArray(fileData) || fileData.type !== "file") {
+            throw new AppError("The specified path is not a file.",400)
+        }
+
+
+        const content = fileData.content
+            ? Buffer.from(fileData.content, "base64").toString()
+            : await GitRepositoryService.fetchFileContent(octokit, user.login, repo, path);
+
+        const summary = await GenAIService.summarizeCode(content);
+        const responseData = { "Code Summary": summary };
+        return responseHandler(res, 200, `File from repo fetched successfully!`, responseData);
     }
 
+    public static async fetchFileContent(octokit: Octokit, owner: string, repo: string, path: string): Promise<string> {
+        const {data: fileContentData} = await octokit.request(
+            "GET /repos/{owner}/{repo}/contents/{path}",
+            {
+                owner: owner,
+                repo: repo,
+                path: path,
+                headers: {
+                    Accept: "application/vnd.github.v3.raw"
+                }
+            }
+        );
+
+        return fileContentData as unknown as string;
+    }
 }
 
 export default GitRepositoryService;
