@@ -21,6 +21,13 @@ class GenAIService {
         return reply
     }
 
+    public static reviewPrChanges = async (code:any)=>{
+        const prompt = `This prompt is being used while interacting with the google gemini api. So give me concise and clear answer to the following question because I need a short response. Give PR for following patch: ${code}. This should be short meaning just review and give what can be improved or what errors can be fixed. Also the answer should be in paragraph instead of points.`
+        const response = await GenAIService.connectToModel().generateContent(prompt)
+        const reply = response.response.text()
+        return reply
+    }
+
 }
 
 
