@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import responseHandler from "./responseHandler";
 import {statusConstants} from "../constants/status.constant";
-import {ICustomError} from "../@types/interfaces/customError";
+import {ICustomError} from "../@types/interfaces/customError.interface";
 const {ERROR}=statusConstants
 
 const handleError = (err: ICustomError, req: Request, res: Response, next: NextFunction) => {

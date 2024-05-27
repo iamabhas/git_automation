@@ -1,5 +1,5 @@
 import {Response} from "express";
-import {IResponseJson} from "../@types/interfaces/responseJson";
+import {IResponseJson} from "../@types/interfaces/responseJson.interface";
 import {statusCodeMessages} from "../constants/status.constant";
 import handleStatus from "./statusHandler";
 
