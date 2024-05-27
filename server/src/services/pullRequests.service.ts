@@ -3,6 +3,7 @@ import {Octokit} from "@octokit/rest";
 import responseHandler from "../helpers/responseHandler";
 import {IFetchPrResponse} from "../@types/interfaces/githubResponse.interface"
 import GenAIService from "./genAI.service";
+import {decryptToken} from "../utils/secureToken";
 
 
 class PullRequestsService {
@@ -10,7 +11,8 @@ class PullRequestsService {
     public static async fetchPrsService(res: Response,body:any) {
         const {githubAccessToken,repo} = body
 
-        const octokit = new Octokit({auth:githubAccessToken});
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
 
         const {data:user} = await octokit.request("GET /user")
 
@@ -45,7 +47,8 @@ class PullRequestsService {
 
     public static async fetchFilesFromPrService(res:Response,body:any){
         const {githubAccessToken,repo,pullNumber}=body
-        const octokit = new Octokit({auth:githubAccessToken});
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
         const {data:user} = await octokit.request("GET /user")
 
         const { data:prFiles} = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/files', {
@@ -63,7 +66,8 @@ class PullRequestsService {
 
     public static async generateReviewForPrService (res:Response,body:any){
         const {githubAccessToken,repo,pullNumber,fileName}=body
-        const octokit = new Octokit({auth:githubAccessToken});
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
         const {data:user} = await octokit.request("GET /user")
 
         const { data:prFiles} = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/files', {
@@ -87,7 +91,8 @@ class PullRequestsService {
 
     public static async createReviewCommentService (res:Response,body:any){
         const {githubAccessToken,repo,pullNumber,fileName,commitId,comment}=body
-        const octokit = new Octokit({auth:githubAccessToken});
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
         const {data:user} = await octokit.request("GET /user")
         const username = user.login
       const response = await octokit.rest.pulls.createReviewComment({

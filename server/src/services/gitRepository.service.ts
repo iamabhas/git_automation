@@ -3,12 +3,13 @@ import {Octokit} from "@octokit/rest";
 import responseHandler from "../helpers/responseHandler";
 import GenAIService from "./genAI.service";
 import AppError from "../utils/appError.util";
+import {decryptToken} from "../utils/secureToken";
 class GitRepositoryService {
 
     public static async fetchAllReposService(res: Response,body:any) {
         const {githubAccessToken} = body
-
-        const octokit = new Octokit({auth:githubAccessToken});
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
 
         const {data:user} = await octokit.request("GET /user")
         const {data: repos} = await octokit.request('GET /users/{username}/repos', {
@@ -25,7 +26,8 @@ class GitRepositoryService {
     public static async fetchFileFromRepoAndSummarizeService(res:Response,body:any){
         const {githubAccessToken,repo,path} = body
 
-        const octokit = new Octokit({auth:githubAccessToken});
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
 
         const {data:user} = await octokit.request("GET /user")
 
