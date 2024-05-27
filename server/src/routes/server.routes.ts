@@ -6,6 +6,7 @@ import handleError from "../helpers/errorHandler";
 
 import authRouter from "./auth.routes";
 import gitRepositoryRouter from "./gitRepository.routes";
+import pullRequestsRouter from "./pullRequests.routes";
 
 const initializeRoutes = (expressApplication: Application) => {
   console.log("Initialized Routes...!");
@@ -18,7 +19,8 @@ const initializeRoutes = (expressApplication: Application) => {
   //app  routes
   expressApplication.use("/api/",[
       authRouter,
-      gitRepositoryRouter
+      gitRepositoryRouter,
+      pullRequestsRouter
   ])
 
   // error route
@@ -26,6 +28,7 @@ const initializeRoutes = (expressApplication: Application) => {
     next(new AppError(`Cannot find ${req.originalUrl} on method ${req.method}`,404))
   })
 
+  //error handle middleware
   expressApplication.use((err: AppError, req: Request, res: Response,next:NextFunction) => {
     handleError(err, req, res,next);
   });
