@@ -13,7 +13,8 @@ if (envVariableLoadingError) {
 
 const envConfig = {
   serverPort: process.env.SERVER_PORT,
-  geminiApiKey :process.env.GEMINI_API_KEY
+  geminiApiKey: process.env.GEMINI_API_KEY,
+  cryptrSecretKey: process.env.CRYPTR_SECRET_KEY
 };
 
 export default envConfig;
