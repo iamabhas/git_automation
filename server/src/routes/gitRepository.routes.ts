@@ -5,8 +5,8 @@ import {githubRepoFileValidation} from "../validators/repo.validator";
 import {validateBody} from "../middlewares/validation.middleware";
 const gitRepositoryRouter:Router = Router()
 
-gitRepositoryRouter.get("/repo/fetch-all",validateToken,GitRepositoryController.fetchAllReposController)
+gitRepositoryRouter.post("/repo/fetch-all",validateToken,GitRepositoryController.fetchAllReposController)
 
-gitRepositoryRouter.get("/repo/fetch-file-from-repo",validateToken,githubRepoFileValidation(),validateBody,GitRepositoryController.fetchFileFromRepoAndSummarizeController)
+gitRepositoryRouter.post("/repo/fetch-file-from-repo",validateToken,githubRepoFileValidation(),validateBody,GitRepositoryController.fetchFileFromRepoAndSummarizeController)
 
 export default  gitRepositoryRouter
