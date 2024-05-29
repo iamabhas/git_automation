@@ -12,6 +12,15 @@ class AuthController {
         }
     }
 
+    public static async fetchProfileController(req:Request,res:Response,next:NextFunction):Promise<any> {
+        try{
+            const body = req.body
+            await AuthService.fetchProfileService(res,body)
+        }catch(err:any){
+            next(err)
+        }
+    }
+
 }
 
 export default AuthController
