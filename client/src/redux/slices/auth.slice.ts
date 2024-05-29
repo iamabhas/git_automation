@@ -9,11 +9,11 @@ const initialState:CounterState={
 }
 
 export const authSlice = createSlice({
-    name:"login",
+    name:"auth",
     initialState,
     reducers:{
         loginUser:(state,action)=>{
-            state.githubAccessToken = action.payload.token
+            state.githubAccessToken = action.payload
         },
         logoutUser:(state)=>{
             state.githubAccessToken=null
