@@ -7,10 +7,12 @@ export interface IFetchPrResponse{
     head:{
         branch:string,
         user:string | null | undefined
+        sha:string
     }
     base:{
         branch:string,
         user:string | null | undefined
+        sha:string
     }
 
 }
