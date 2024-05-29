@@ -32,16 +32,18 @@ class PullRequestsService {
                 prBody:pr.body,
                 head:{
                     branch:pr.head.ref,
-                    user:pr.head.user?.login
+                    user:pr.head.user?.login,
+                    sha:pr.head.sha
                 },
                 base:{
                     branch:pr.base.ref,
-                    user:pr.base.user?.login
+                    user:pr.base.user?.login,
+                    sha:pr.base.sha
                 },
             })
         })
 
-        return responseHandler(res,200,`PRs for ${repo} fetched successfully !`,{prs:prsList},prsList.length)
+        return responseHandler(res,200,`PRs for ${repo} fetched successfully !`, {prs:prsList},prsList.length)
     }
 
 

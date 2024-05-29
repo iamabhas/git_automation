@@ -18,7 +18,10 @@ class GitRepositoryService {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         })
-        const responseData = repos.map((repo) => repo.name)
+        const responseData = repos.map((repo) => {
+            const data = {id:repo.id,repoName:repo.name,repoUrl:repo.html_url,accessType:repo.private}
+            return data
+        })
 
         return responseHandler(res,200,`Repos fetched successfully !`,responseData,responseData.length)
     }
