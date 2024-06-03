@@ -38,6 +38,25 @@ class PullRequestsController {
             next(err)
         }
     }
+
+    public static async reviewAllFileForPrController(req:Request,res:Response,next:NextFunction):Promise<any> {
+        try{
+            const body = req.body
+            await PullRequestsService.reviewAllFilesForPrService(res,body)
+        }catch(err:any){
+            next(err)
+        }
+    }
+
+    public static async fetchAllReviewsController(req:Request,res:Response,next:NextFunction):Promise<any> {
+        try{
+            const body = req.body
+            await PullRequestsService.fetchAllReviewsService(res,body)
+        }catch(err:any){
+            next(err)
+        }
+    }
+
 }
 
 export default PullRequestsController

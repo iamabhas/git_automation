@@ -18,4 +18,8 @@ pullRequestsRouter.post("/prs/generate-review",validateToken,fetchPrsValidation(
 
 pullRequestsRouter.post("/prs/create-review-comment",validateToken,fetchPrsValidation(),fetchFilesFromPrValidation(),generateReviewForPrValidation(),createReviewCommentValidation(),validateBody,PullRequestsController.createReviewCommentController)
 
+pullRequestsRouter.post("/prs/review-all-files",validateToken,fetchPrsValidation(),fetchFilesFromPrValidation(),validateBody,PullRequestsController.reviewAllFileForPrController)
+
+pullRequestsRouter.post("/prs/fetch-all-reviews",validateToken,fetchPrsValidation(),fetchFilesFromPrValidation(),validateBody,PullRequestsController.fetchAllReviewsController)
+
 export default  pullRequestsRouter

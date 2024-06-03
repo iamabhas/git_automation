@@ -112,6 +112,55 @@ class PullRequestsService {
 
     }
 
+    public static async reviewAllFilesForPrService (res:Response,body:any){
+        const {githubAccessToken,repo,pullNumber,commitId}=body
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
+        const {data:user} = await octokit.request("GET /user")
+        const username = user.login
+        const { data:prFiles} = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/files', {
+            owner: user.login,
+            repo: repo,
+            pull_number: pullNumber,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+        prFiles.forEach(async (prFile)=>{
+            let codeReview = await GenAIService.reviewPrChanges(prFile.patch)
+            await octokit.rest.pulls.createReviewComment({
+                owner:username,
+                repo,
+                pull_number:pullNumber,
+                body:codeReview,
+                commit_id:commitId,
+                path:prFile.filename,
+                subject_type:"file"
+
+            })
+        })
+        return responseHandler(res,201,`Reviews added successfully !`)
+    }
+
+    public static async fetchAllReviewsService (res:Response,body:any){
+        const {githubAccessToken,repo,pullNumber}=body
+        const token = decryptToken(githubAccessToken)
+        const octokit = new Octokit({auth:token});
+        const {data:user} = await octokit.request("GET /user")
+        const username = user.login
+
+        const {data:reviews}= await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/comments', {
+            owner: username,
+            repo: repo,
+            pull_number: pullNumber,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+
+        return responseHandler(res,200,`Reviews for current PR fetched successfully !`,reviews,reviews.length)
+    }
+
 
 }
 
