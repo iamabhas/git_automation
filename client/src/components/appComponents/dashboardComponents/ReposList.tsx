@@ -35,7 +35,7 @@ const ReposList = ({token}:{token:string|null}) => {
                 githubAccessToken: token,
             });
             const testRepo = response.data.data.filter((repo:IReposList)=>{
-                return repo.repoName === "InternManagementSystem" || repo.repoName === "git_automation"
+                return repo.repoName === "InternManagementSystem" || repo.repoName === "git_automation" || repo.repoName==="git_automation_test_repo"
             })
             setRepos(testRepo);
         }

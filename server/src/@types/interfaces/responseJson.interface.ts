@@ -5,3 +5,4 @@ export interface IResponseJson {
     data?:any,
     dataLength?:any
 }
+
