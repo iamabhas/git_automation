@@ -18,14 +18,21 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import {IFilesList} from "@/@types/interface/stateInterfaces.ts";
-
+import Swal from "sweetalert2"
+import { Loader2 } from "lucide-react"
 const {serverUrl} = configVariables
+import ReviewComments from "@/components/appComponents/dashboardComponents/ReviewComments.tsx";
 
 const AutoReviewPrFiles = ({ setIsReviewDialogOpen,fetchFilesData,setFetchFilesData}) => {
     const [filesData,setFilesData]=useState<IFilesList[]>([])
+
     const [open,setOpen]=useState(false);
+    const [reviewsDialogOpen,setReviewsDialogOpen]=useState(false);
+
     const [currentFile,setCurrentFile]=useState("");
     const [currentReview,setCurrentReview]=useState("")
+    const [reviewAllFilesFlag,setReviewAllFilesFlag]=useState(false)
+
     useEffect(() => {
         const fetchFiles= async()=>{
             const response = await axios.post(`${serverUrl}/api/prs/fetch-pr-files`, {
@@ -51,6 +58,37 @@ const AutoReviewPrFiles = ({ setIsReviewDialogOpen,fetchFilesData,setFetchFilesD
         setCurrentReview(response.data.data.prReview)
     }
 
+    const reviewAllFiles = async ()=>{
+        try{
+            const response =await axios.post(`${serverUrl}/api/prs/review-all-files`, {
+                githubAccessToken:fetchFilesData.token,
+                repo:fetchFilesData.repo,
+                pullNumber:fetchFilesData.pullNumber,
+                commitId:fetchFilesData.sha
+            })
+            Swal.fire({
+                icon: "success",
+                title: "Added Review",
+                text: response.data.message || `Added reviews for all files for current PR !`,
+            });
+        }catch(err){
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: `Failed to review files`,
+            });
+        }
+
+    }
+
+    const propsObject = {
+        reviewsDialogOpen,
+        setReviewsDialogOpen,
+        githubAccessToken:fetchFilesData.token,
+        repo:fetchFilesData.repo,
+        pullNumber:fetchFilesData.pullNumber,
+    }
+
     const addReviewComment = async ()=>{
         try{
             const response = await axios.post(`${serverUrl}/api/prs/create-review-comment`, {
@@ -63,8 +101,18 @@ const AutoReviewPrFiles = ({ setIsReviewDialogOpen,fetchFilesData,setFetchFilesD
             })
             console.log(response.data)
             setOpen(false)
+            Swal.fire({
+                icon: "success",
+                title: "Added Review",
+                text: `Review comment added for ${currentFile}`,
+            });
         }catch(err){
-            console.log(err)
+            setOpen(false)
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Failed to add review comment !",
+            });
         }
 
     }
@@ -83,6 +131,9 @@ const AutoReviewPrFiles = ({ setIsReviewDialogOpen,fetchFilesData,setFetchFilesD
                     sha:""
                 })
             }}>Back</Button>
+            <Button className="m-2"  onClick={()=>{
+                setReviewsDialogOpen(true)
+            }}>View Review Comments</Button>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -114,6 +165,16 @@ const AutoReviewPrFiles = ({ setIsReviewDialogOpen,fetchFilesData,setFetchFilesD
                     ))}
                 </TableBody>
             </Table>
+            <Button onClick={async ()=>{
+                setReviewAllFilesFlag(true)
+                await reviewAllFiles()
+                setReviewAllFilesFlag(false)
+
+            }} disabled={reviewAllFilesFlag}>
+                {reviewAllFilesFlag && <Loader2 className="mr-2 h-4 w-4 animate-spin" /> }
+                {reviewAllFilesFlag ? `Generating review for files...`:`Review all files at once`}
+                </Button>
+
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent >
                     <DialogHeader>
@@ -123,13 +184,18 @@ const AutoReviewPrFiles = ({ setIsReviewDialogOpen,fetchFilesData,setFetchFilesD
                                 {currentReview.length>0 ? `${currentReview}`:`Generating Review. Please wait...`}
                             </div>
                             <Button disabled={currentReview===""} className="m-5 " onClick={()=>{
+
                                 generateFileReview(currentFile)
                             }}>Regenerate Review</Button>
-                            <Button disabled={currentReview===""} className="m-5 " onClick={addReviewComment}>Add Review Comment</Button>
+                            <Button disabled={currentReview===""} className="m-5 " onClick={()=>{
+                                addReviewComment()
+                            }}>Add Review Comment</Button>
                         </DialogDescription>
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
+
+            <ReviewComments {...propsObject}/>
             </main>
     );
 };
